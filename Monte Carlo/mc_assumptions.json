@@ -1,5 +1,5 @@
 ﻿{
-  "n_sim": 10000,
+  "n_sim": 100000,
   "seed": null,
   "input_xlsx": "Sample Persona Database (Monte Carlo).xlsx",
   "output_dir": "outputs",
