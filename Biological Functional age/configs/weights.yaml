@@ -1,0 +1,38 @@
+# BFA Calculation Weights Configuration
+
+# Pillar weights (must sum to 100)
+pillar_weights:
+  metabolic: 25
+  vitality: 20
+  strength: 20
+  mobility: 20
+  cognitive: 15
+
+# Sub-test weights within each pillar (must sum to 100 within pillar)
+subtest_weights:
+  vitality:
+    vo2_max: 70
+    fev1: 30
+
+  strength:
+    grip_strength: 50
+    sts_power: 25
+    vertical_jump: 25
+
+  mobility:
+    single_leg_stance: 40
+    gait_speed: 30
+    tug: 20
+    sit_and_reach: 10
+
+  cognitive:
+    processing_speed: 60
+    working_memory: 40
+
+  metabolic:
+    apob: 30
+    homa_ir: 25
+    hba1c: 15
+    whtr: 15
+    hscrp: 10
+    body_fat_pct: 5

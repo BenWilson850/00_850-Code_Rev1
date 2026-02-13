@@ -1,0 +1,48 @@
+# Healthspan Index Categories
+
+# Score ranges for categorization
+# Format: [min_score, max_score]
+categories:
+  Critical:
+    min: 300
+    max: 459
+    description: "Critical functional decline requiring immediate intervention"
+
+  Poor:
+    min: 460
+    max: 549
+    description: "Significant functional limitations present"
+
+  Fair:
+    min: 550
+    max: 599
+    description: "Functional but fragile; improvement needed"
+
+  Average:
+    min: 600
+    max: 649
+    description: "Typical for age, but far from optimal"
+
+  Good:
+    min: 650
+    max: 709
+    description: "Strong foundation for long-term health"
+
+  Excellent:
+    min: 710
+    max: 799
+    description: "High functional capacity and low risk profile"
+
+  Elite:
+    min: 800
+    max: 850
+    description: "Exceptional resilience and performance for age"
+
+# Healthspan Index calculation parameters
+healthspan_index:
+  base_score: 670
+  points_per_year: 6.5
+  min_score: 300
+  max_score: 850
+  bfa_clamp_min: 25
+  bfa_clamp_max: 90

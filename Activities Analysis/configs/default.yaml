@@ -1,0 +1,39 @@
+# Matrix pipeline default configuration
+
+pipeline:
+  name: activities-threshold-matrix
+  version: "0.1.0"
+
+paths:
+  # Input paths (override via CLI or env)
+  client_workbook: null
+  limits_matrix: "Exercise limits optimised.xlsx"
+  classifications_matrix: "Exercise Threshold Classifications.xlsx"
+  docx_spec: "Activities Threshold Logic Matrix.docx"
+  # Output directory (default: out)
+  output_dir: out
+  report_name: "persona_activity_report.xlsx"
+
+excel:
+  matrix_sheet: 0
+  header_row: 0
+
+logging:
+  level: INFO
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+  file: null  # set to path to also log to file
+
+client:
+  metadata_rows: 4
+  table_start_row: 5
+  test_col: "A"
+  yr5_col: "C"
+  yr10_col: "D"
+
+status:
+  red_lt: 90.0
+  yellow_hi: 110.0
+
+output:
+  sheet_name_template: "{name}_{age}"
+  max_sheet_name_len: 31

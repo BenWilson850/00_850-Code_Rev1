@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(.venv/Scripts/pip.exe install:*)",
+      "Bash(.venvScriptspython.exe -m pip install mypy)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(python:*)",
+      "Bash(..venvScriptspython.exe:*)",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\":*)",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\" -c \"import pandas as pd; df = pd.read_excel\\(''Exercise Threshold Classifications.xlsx'', sheet_name=''Activities Thresholds_Rev2''\\); row_30 = df.iloc[30]; print\\(''5km run classifications:''\\); print\\(row_30[[''Activity'', ''VO2 Max \\(ml/kg/min\\)'', ''FEV1 \\(% predicted\\)'', ''STS Power \\\\nw/kg'', ''HbA1c \\(%\\)'', ''HOMA IR'', ''Gait Speed \\(m/s\\)'', ''Body Fat %'', ''ApoB \\(g/L\\)'', ''hsCRP \\(mg/L\\)'', ''TUG \\(sec\\)'', ''Single Leg Stance \\(sec\\)'']]\\)\")",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\" fix_activity_names.py)",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\" -m src.pipeline.cli --clients \"Sample Persona Database.xlsx\" -o out -v)",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\" -c \"import pandas as pd; df = pd.read_excel\\(''out/persona_activity_report.xlsx'', sheet_name=''Victor_56''\\); print\\(''Victor_56 - 5km run analysis:\\\\n''\\); print\\(df[df[''Activity''] == ''5km run''][[''Activity'', ''5 Year Critical Failures'', ''5 Year Supporting Failures'', ''5 Year Final Status'']].to_string\\(index=False\\)\\); print\\(''\\\\n\\\\nFull 5 year data:''\\); five_year_row = df[df[''Activity''] == ''5km run'']; print\\(''Critical:'', five_year_row[''5 Year Critical Failures''].values[0]\\); print\\(''Supporting:'', five_year_row[''5 Year Supporting Failures''].values[0]\\); print\\(''Status:'', five_year_row[''5 Year Final Status''].values[0]\\):*)",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\" validate_output.py)",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\" verify_validator.py)",
+      "Bash(\".\\\\.venv\\\\Scripts\\\\python.exe\" run_validation.py)",
+      "Bash(git push:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)"
+    ]
+  }
+}
