@@ -49,6 +49,10 @@
     "Processing Speed",
     "Working Memory"
   ],
+  "absolute_decline_tests": [
+    "Processing Speed",
+    "Working Memory"
+  ],
   "allow_negative_tests": [
     "Processing Speed",
     "Working Memory",

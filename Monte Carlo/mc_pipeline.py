@@ -209,7 +209,7 @@ def sample_correlated_z(L):
     return x
 
 
-def apply_decline(value, age_start, years, rate_base, rate_post, accel_age, higher_is_better):
+def apply_decline(value, age_start, years, rate_base, rate_post, accel_age, higher_is_better, use_absolute=False):
     if years <= 0:
         return value
     years1 = years
@@ -224,13 +224,22 @@ def apply_decline(value, age_start, years, rate_base, rate_post, accel_age, high
     def apply_segment(val, rate, years_segment):
         if years_segment <= 0:
             return val
-        if higher_is_better:
-            # If val is negative, a decline should push it further negative (worse)
-            factor = (1.0 - rate) if val >= 0 else (1.0 + rate)
+        if use_absolute:
+            # Absolute decline (e.g., standard deviations for cognitive tests)
+            decline_amount = rate * (years_segment / 10.0)
+            if higher_is_better:
+                return val - decline_amount
+            else:
+                return val + decline_amount
         else:
-            # Lower is better: decline should increase value (worse)
-            factor = (1.0 + rate) if val >= 0 else (1.0 - rate)
-        return val * (factor ** (years_segment / 10.0))
+            # Relative/percentage decline (for physical tests)
+            if higher_is_better:
+                # If val is negative, a decline should push it further negative (worse)
+                factor = (1.0 - rate) if val >= 0 else (1.0 + rate)
+            else:
+                # Lower is better: decline should increase value (worse)
+                factor = (1.0 + rate) if val >= 0 else (1.0 - rate)
+            return val * (factor ** (years_segment / 10.0))
 
     val = value
     if years1 > 0:
@@ -324,6 +333,7 @@ def simulate_client(client, cfg, corr_tests, corr_L, scenario):
     higher_is_better = set(cfg['higher_is_better'])
     lower_is_better = set(cfg['lower_is_better'])
     cognitive = set(cfg['cognitive_tests'])
+    absolute_decline = set(cfg.get('absolute_decline_tests', []))
     allow_negative = set(cfg.get('allow_negative_tests', cfg['cognitive_tests'] + ['Sit and Reach']))
 
     base_rate = cfg['decline']['base_rate_per_decade']
@@ -373,10 +383,18 @@ def simulate_client(client, cfg, corr_tests, corr_L, scenario):
                 val = true0[test]
                 if scenario == 'improvement':
                     imp = sample_improvement_fraction(test, age, improve_cfg)
-                    if test in lower_is_better:
-                        val = val * (1.0 - imp) if val >= 0 else val * (1.0 + imp)
+                    if test in absolute_decline:
+                        # Absolute improvement (standard deviations for cognitive tests)
+                        if test in lower_is_better:
+                            val = val - imp
+                        else:
+                            val = val + imp
                     else:
-                        val = val * (1.0 + imp) if val >= 0 else val * (1.0 - imp)
+                        # Relative improvement (percentage for physical tests)
+                        if test in lower_is_better:
+                            val = val * (1.0 - imp) if val >= 0 else val * (1.0 + imp)
+                        else:
+                            val = val * (1.0 + imp) if val >= 0 else val * (1.0 - imp)
                     val = apply_decline(
                         val,
                         (age or 0) + 1,
@@ -384,7 +402,8 @@ def simulate_client(client, cfg, corr_tests, corr_L, scenario):
                         rate[test],
                         rate_post[test],
                         accel_age.get(test),
-                        test in higher_is_better
+                        test in higher_is_better,
+                        test in absolute_decline
                     )
                 else:
                     val = apply_decline(
@@ -394,14 +413,21 @@ def simulate_client(client, cfg, corr_tests, corr_L, scenario):
                         rate[test],
                         rate_post[test],
                         accel_age.get(test),
-                        test in higher_is_better
+                        test in higher_is_better,
+                        test in absolute_decline
                     )
 
                 if practice_cfg.get('enabled') and years == practice_cfg.get('year') and test in practice_cfg.get('tests', []):
-                    if val >= 0:
-                        val = val * (1.0 + practice_cfg.get('percent', 0.0))
+                    practice_amount = practice_cfg.get('percent', 0.0)
+                    if test in absolute_decline:
+                        # Absolute practice effect (standard deviations for cognitive tests)
+                        val = val + practice_amount
                     else:
-                        val = val * (1.0 - practice_cfg.get('percent', 0.0))
+                        # Relative practice effect (percentage for physical tests)
+                        if val >= 0:
+                            val = val * (1.0 + practice_amount)
+                        else:
+                            val = val * (1.0 - practice_amount)
 
                 obs = apply_measurement_noise(test, val, measurement_cv, measurement_lognormal, allow_negative)
                 sums[test] += obs
